@@ -51,11 +51,11 @@ class Pokemon(object):
 
 
 def check_nidoran(name):
-    name = name.lower()
-    if name == 'nidoranf':
+    check = name.lower()
+    if check == 'nidoranf':
         female = u'\u2640'.encode('utf-8')
         name = 'Nidoran'+female
-    if name == 'nidoranm':
+    if check == 'nidoranm':
         male = u"\u2642".encode('utf-8')
         name = 'Nidoran' + male
 
