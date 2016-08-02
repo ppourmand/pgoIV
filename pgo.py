@@ -93,7 +93,7 @@ def sort_cp_(query=None, verbose=False):
     for record in _get_records():
         name, cp, hp, dust, powered_up = record.split(',')
         if query is None or name == query:
-            poke = [name, cp, hp, dust, powered_up]
+            poke = [name, int(cp), int(hp), int(dust), powered_up]
             poke_sorted_by_cp.append(poke)
 
     # sorting by cp
