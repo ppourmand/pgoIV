@@ -1,6 +1,8 @@
 # Pokemon GO IV calculator and database
 ## Usage
 
+Thanks to [Nikita](https://github.com/nkouevda) for writing most of this code, I just made some additions
+
 ### First set executable
     chmod +x pgo
 
@@ -22,5 +24,5 @@
 ### If pokemon has at least 1 perfect IV
     - wow
 
-### Sample usage
+### Sample
     python pgo.py calc diglett 71 10 600 amazing def wow -v
