@@ -83,9 +83,18 @@ class Pokemon(object):
                 for i in strongestCombinations:
                     if i['atk_iv'] == 15 or i['def_iv'] == 15 or i['stam_iv'] == 15:
                         ivStatCombinations.append(i)
-
-            sorted_combinations = sorted(
-                ivStatCombinations, key=lambda c: c['perfection'], reverse=True)
+                sorted_combinations = sorted(
+                    ivStatCombinations, key=lambda c: c['perfection'], reverse=True)
+            elif self.iv_stats == 'excellent':
+                for i in strongestCombinations:
+                    if i['atk_iv'] != 15 and i['def_iv'] != 15 and i['stam_iv'] != 15:
+                        ivStatCombinations.append(i)
+                sorted_combinations = sorted(
+                    ivStatCombinations, key=lambda c: c['perfection'], reverse=True)
+            else:
+                sorted_combinations = sorted(
+                    strongestCombinations, key=lambda c: c['perfection'], reverse=True)
+            
             stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations))  
         else:
             sorted_combinations = sorted(
@@ -127,6 +136,7 @@ def calc(name, cp, hp, dust, phrase='', strongest_feature='', iv_stats='', power
       - stam
     IV stats:
       - wow
+      - excellent
 
     Example:
         python pgo.py calc diglett 71 10 600 amazing def wow -v
