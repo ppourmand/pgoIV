@@ -73,10 +73,22 @@ class Pokemon(object):
                 for i in phraseCombinations:
                     if i['def_iv'] >= i['atk_iv'] and i['def_iv'] >= i['stam_iv']:
                         strongestCombinations.append(i)
-            elif self.strongest_feature == 'stam':
+            elif self.strongest_feature == 'sta':
                 for i in phraseCombinations:
                     if i['stam_iv'] >= i['atk_iv'] and i['stam_iv'] >= i['def_iv']:
-                        strongestCombinations.append(i)      
+                        strongestCombinations.append(i)  
+            elif self.strongest_feature == 'atkdef':
+                for i in phraseCombinations:
+                    if i['atk_iv'] == i['def_iv'] and i['atk_iv'] != i['stam_iv'] and i['def_iv'] != i['stam_iv']:
+                        strongestCombinations.append(i) 
+            elif self.strongest_feature == 'atksta':
+                for i in phraseCombinations:
+                    if i['atk_iv'] == i['stam_iv'] and i['atk_iv'] != i['def_iv'] and i['def_iv'] != i['stam_iv']:
+                        strongestCombinations.append(i) 
+            elif self.strongest_feature == 'defsta':
+                for i in phraseCombinations:
+                    if i['def_iv'] == i['stam_iv'] and i['atk_iv'] != i['def_iv'] and i['atk_iv'] != i['stam_iv']:
+                        strongestCombinations.append(i) 
 
             # if perfect IV in at least 1 stat
             if self.iv_stats == 'wow':
