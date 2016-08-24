@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-
 import commandr
 from pogoiv import iv_calculator
 import termcolor
@@ -13,7 +12,7 @@ _DB_FILENAME = os.path.expanduser('~/.pgo_db')
 
 class Pokemon(object):
 
-    def __init__(self, name, cp, hp, dust, powered_up=False):
+    def __init__(self, name, cp, hp, dust, phrase, powered_up=False):
         # some hacky shit with unicode female/male symbols
         name = check_nidoran(name)
 
@@ -21,9 +20,10 @@ class Pokemon(object):
         self.cp = int(cp)
         self.hp = int(hp)
         self.dust = int(dust)
+        self.phrase = phrase
         self.powered_up = bool(powered_up)
 
-    def get_stats(self, verbose=False):
+    def get_stats(self, verbose=True):
         combinations = _CALCULATOR.get_ivs(
             self.name, self.cp, self.hp, self.dust, self.powered_up)
 
@@ -37,10 +37,33 @@ class Pokemon(object):
                 _format_perfection(sum(perfections) / len(perfections)),
                 len(combinations))
 
+        newCombinations = []
+
         if verbose:
+            if self.phrase == 'amazing':
+                for i in combinations:
+                    if i['perfection'] >= 82.2:
+                        newCombinations.append(i)
+            elif self.phrase == 'strong':
+                for i in combinations:
+                    if i['perfection'] >= 66.7 and i['perfection'] <= 80:
+                        newCombinations.append(i)
+            elif self.phrase == 'decent':
+                for i in combinations:
+                    if i['perfection'] >= 51.1 and i['perfection'] <= 64.4:
+                        newCombinations.append(i)
+            elif self.phrase == 'bad':
+                for i in combinations:
+                    if i['perfection'] <= 48.9:
+                        newCombinations.append(i)
+            elif self.phrase == 'all':
+                for i in combinations:
+                    newCombinations.append(i)
+
             sorted_combinations = sorted(
-                combinations, key=lambda c: c['perfection'], reverse=True)
-            stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations))
+                newCombinations, key=lambda c: c['perfection'], reverse=True)
+            stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations))        
+
 
         return '%s, %d/%d/%d, %s: %s' % (
             self.name, self.cp, self.hp, self.dust, self.powered_up, stats)
@@ -63,9 +86,19 @@ def check_nidoran(name):
 
 
 @commandr.command
-def calc(name, cp, hp, dust, powered_up=False, verbose=False):
-    print Pokemon(name, cp, hp, dust, powered_up).get_stats(verbose)
+def calc(name, cp, hp, dust, phrase, powered_up=False, verbose=True):
+    """Calculates the pokemon's possible IV. Use 
+    Phrases:
+      - amazing
+      - strong
+      - decent
+      - bad 
+      - all
 
+    Example:
+        python pgo.py calc vulpix 337 46 1900 decent
+    """
+    print Pokemon(name, cp, hp, dust, phrase, powered_up).get_stats(verbose)
 
 @commandr.command('list')
 def list_(query=None, verbose=False):
