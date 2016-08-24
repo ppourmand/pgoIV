@@ -78,6 +78,7 @@ class Pokemon(object):
                     if i['stam_iv'] >= i['atk_iv'] and i['stam_iv'] >= i['def_iv']:
                         strongestCombinations.append(i)      
 
+            # if perfect IV in at least 1 stat
             if self.iv_stats == 'wow':
                 for i in strongestCombinations:
                     if i['atk_iv'] == 15 or i['def_iv'] == 15 or i['stam_iv'] == 15:
@@ -89,7 +90,7 @@ class Pokemon(object):
         else:
             sorted_combinations = sorted(
                 combinations, key=lambda c: c['perfection'], reverse=True)
-        stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations)) 
+            stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations)) 
         
         return '%s, %d/%d/%d, %s: %s' % (
             self.name, self.cp, self.hp, self.dust, self.powered_up, stats)
@@ -128,7 +129,7 @@ def calc(name, cp, hp, dust, phrase='', strongest_feature='', iv_stats='', power
       - wow
 
     Example:
-        python pgo.py calc vulpix 337 46 1900 decent
+        python pgo.py calc diglett 71 10 600 amazing def wow -v
     """
     print Pokemon(name, cp, hp, dust, phrase, strongest_feature, iv_stats, powered_up).get_stats(verbose)
 
