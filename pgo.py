@@ -39,7 +39,7 @@ class Pokemon(object):
                 _format_perfection(sum(perfections) / len(perfections)),
                 len(combinations)) 
 
-        newCombinations = []
+        phraseCombinations = []
         strongestCombinations = []
         ivStatCombinations = []
 
@@ -47,34 +47,34 @@ class Pokemon(object):
             if self.phrase == 'amazing':
                 for i in combinations:
                     if i['perfection'] >= 82.2:
-                        newCombinations.append(i)
+                        phraseCombinations.append(i)
             elif self.phrase == 'strong':
                 for i in combinations:
                     if i['perfection'] >= 66.7 and i['perfection'] <= 80:
-                        newCombinations.append(i)
+                        phraseCombinations.append(i)
             elif self.phrase == 'decent':
                 for i in combinations:
                     if i['perfection'] >= 51.1 and i['perfection'] <= 64.4:
-                        newCombinations.append(i)
+                        phraseCombinations.append(i)
             elif self.phrase == 'bad':
                 for i in combinations:
                     if i['perfection'] <= 48.9:
-                        newCombinations.append(i)
+                        phraseCombinations.append(i)
             elif self.phrase == 'all':
                 for i in combinations:
-                    newCombinations.append(i)
+                    phraseCombinations.append(i)
 
             #now sort if strongest feature
             if self.strongest_feature == 'atk':
-                for i in newCombinations:
+                for i in phraseCombinations:
                     if i['atk_iv'] >= i['def_iv'] and i['atk_iv'] >= i['stam_iv']:
                         strongestCombinations.append(i)
             elif self.strongest_feature == 'def':
-                for i in newCombinations:
+                for i in phraseCombinations:
                     if i['def_iv'] >= i['atk_iv'] and i['def_iv'] >= i['stam_iv']:
                         strongestCombinations.append(i)
             elif self.strongest_feature == 'stam':
-                for i in newCombinations:
+                for i in phraseCombinations:
                     if i['stam_iv'] >= i['atk_iv'] and i['stam_iv'] >= i['def_iv']:
                         strongestCombinations.append(i)      
 
