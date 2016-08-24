@@ -12,7 +12,7 @@ _DB_FILENAME = os.path.expanduser('~/.pgo_db')
 
 class Pokemon(object):
 
-    def __init__(self, name, cp, hp, dust, phrase, powered_up=False):
+    def __init__(self, name, cp, hp, dust, phrase, strongest_feature, iv_stats, powered_up=False):
         # some hacky shit with unicode female/male symbols
         name = check_nidoran(name)
 
@@ -21,9 +21,11 @@ class Pokemon(object):
         self.hp = int(hp)
         self.dust = int(dust)
         self.phrase = phrase
+        self.strongest_feature = strongest_feature
+        self.iv_stats = iv_stats
         self.powered_up = bool(powered_up)
 
-    def get_stats(self, verbose=True):
+    def get_stats(self, verbose=False):
         combinations = _CALCULATOR.get_ivs(
             self.name, self.cp, self.hp, self.dust, self.powered_up)
 
@@ -35,9 +37,11 @@ class Pokemon(object):
                 _format_perfection(min(perfections)),
                 _format_perfection(max(perfections)),
                 _format_perfection(sum(perfections) / len(perfections)),
-                len(combinations))
+                len(combinations)) 
 
         newCombinations = []
+        strongestCombinations = []
+        ivStatCombinations = []
 
         if verbose:
             if self.phrase == 'amazing':
@@ -60,11 +64,33 @@ class Pokemon(object):
                 for i in combinations:
                     newCombinations.append(i)
 
+            #now sort if strongest feature
+            if self.strongest_feature == 'atk':
+                for i in newCombinations:
+                    if i['atk_iv'] >= i['def_iv'] and i['atk_iv'] >= i['stam_iv']:
+                        strongestCombinations.append(i)
+            elif self.strongest_feature == 'def':
+                for i in newCombinations:
+                    if i['def_iv'] >= i['atk_iv'] and i['def_iv'] >= i['stam_iv']:
+                        strongestCombinations.append(i)
+            elif self.strongest_feature == 'stam':
+                for i in newCombinations:
+                    if i['stam_iv'] >= i['atk_iv'] and i['stam_iv'] >= i['def_iv']:
+                        strongestCombinations.append(i)      
+
+            if self.iv_stats == 'wow':
+                for i in strongestCombinations:
+                    if i['atk_iv'] == 15 or i['def_iv'] == 15 or i['stam_iv'] == 15:
+                        ivStatCombinations.append(i)
+
             sorted_combinations = sorted(
-                newCombinations, key=lambda c: c['perfection'], reverse=True)
-            stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations))        
-
-
+                ivStatCombinations, key=lambda c: c['perfection'], reverse=True)
+            stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations))  
+        else:
+            sorted_combinations = sorted(
+                combinations, key=lambda c: c['perfection'], reverse=True)
+        stats += '\n' + '\n'.join(map(_format_combination, sorted_combinations)) 
+        
         return '%s, %d/%d/%d, %s: %s' % (
             self.name, self.cp, self.hp, self.dust, self.powered_up, stats)
 
@@ -86,7 +112,7 @@ def check_nidoran(name):
 
 
 @commandr.command
-def calc(name, cp, hp, dust, phrase, powered_up=False, verbose=True):
+def calc(name, cp, hp, dust, phrase='', strongest_feature='', iv_stats='', powered_up=False, verbose=False):
     """Calculates the pokemon's possible IV. Use 
     Phrases:
       - amazing
@@ -94,11 +120,17 @@ def calc(name, cp, hp, dust, phrase, powered_up=False, verbose=True):
       - decent
       - bad 
       - all
+    Strongest feature:
+      - atk
+      - def
+      - stam
+    IV stats:
+      - wow
 
     Example:
         python pgo.py calc vulpix 337 46 1900 decent
     """
-    print Pokemon(name, cp, hp, dust, phrase, powered_up).get_stats(verbose)
+    print Pokemon(name, cp, hp, dust, phrase, strongest_feature, iv_stats, powered_up).get_stats(verbose)
 
 @commandr.command('list')
 def list_(query=None, verbose=False):
