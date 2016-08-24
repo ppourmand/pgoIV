@@ -5,7 +5,7 @@
     chmod +x pgo
 
 ### calculate IVs
-    pgo calc [pokemon name] [CP] [Health] [Dust to power up] [phrase] [strongest feature] [perfect iv]
+    python pgo.py calc [pokemon name] [CP] [Health] [Dust to power up] [phrase] [strongest feature] [perfect iv] -v
 
 ### Phrases
     - amazing
@@ -21,3 +21,6 @@
 
 ### If pokemon has at least 1 perfect IV
     - wow
+
+### Sample usage
+    python pgo.py calc diglett 71 10 600 amazing def wow -v
